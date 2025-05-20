@@ -8,7 +8,7 @@ const lastName=document.getElementById("lastName").value.trim();
 const grade=parseFloat (document.getElementById("grade").value);
 
 if( !name || !lastName || isNaN(grade) || grade<1 || grade>7){
-    alert("Error al ingresar ños datos")
+    alert("Error al ingresar los datos")
     return
 }
 const student={name,lastName,grade}
@@ -19,7 +19,7 @@ calcularPromedio()
  
 this.reset();
 });
-const tableBody=document.querySelector("#studentTable tBody");
+const tableBody=document.querySelector("#studentTable tbody");
 function addStudentTable(student){
     const row=document.createElement("tr");
     row.innerHTML=`
