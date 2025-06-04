@@ -5,7 +5,7 @@ const lastNameInput = document.getElementById("lastName");
 const gradeInput = document.getElementById("grade");
 const promedios = document.getElementById("average");
 const tableBody = document.querySelector("#studentTable tbody");
-
+const statsDiv = document.getElementById("stats");
 document.getElementById("studentForm").addEventListener("submit",function(e){
     e.preventDefault();
 
@@ -36,7 +36,7 @@ function addStudentToTable(student) {
         <button class="delete">Eliminar</button>
     </td>
     `;
-    
+
 row.querySelector(".delete").addEventListener("click",function(){
     deleteEstudiante(student,row);
 });
@@ -45,8 +45,11 @@ row.querySelector(".edit").addEventListener("click", function () {
     editarEstudiante(student, row);
 });
 
-tableBody.appendChild(row)
+tableBody.appendChild(row);
+calcularPromedio();
+updateStats();
 }
+
 
 function deleteEstudiante(student,row){
     const index=students.indexOf(student);
@@ -54,6 +57,7 @@ function deleteEstudiante(student,row){
         students.splice(index,1);
         row.remove();
         calcularPromedio();
+        updateStats();
     }
 }
 
@@ -78,3 +82,13 @@ function editarEstudiante(student, row) {
     row.remove();
     calcularPromedio();
 }
+function updateStats() {
+    const total = students.length;
+    const mustTakeExam = students.filter(s => s.grade < 5.0).length;
+    const exempted = students.filter(s => s.grade >= 5.0).length;
+    statsDiv.innerHTML = `
+      <p>Total de estudiantes: ${total}</p>
+      <p>Estudiantes que deben rendir examen: ${mustTakeExam}</p>
+      <p>Estudiantes eximidos: ${exempted}</p>
+    `;
+  }
