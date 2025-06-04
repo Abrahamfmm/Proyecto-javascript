@@ -1,7 +1,13 @@
 const students=[];
 
+const nameInput = document.getElementById("name");
+const lastNameInput = document.getElementById("lastName");
+const gradeInput = document.getElementById("grade");
+const promedios = document.getElementById("average");
+const tableBody = document.querySelector("#studentTable tbody");
+
 document.getElementById("studentForm").addEventListener("submit",function(e){
-e.preventDefault();
+    e.preventDefault();
 
 const name=document.getElementById("name").value.trim();
 const lastName=document.getElementById("lastName").value.trim();
@@ -14,26 +20,34 @@ if( !name || !lastName || isNaN(grade) || grade<1 || grade>7){
 const student={name,lastName,grade}
 students.push(student)
 console.log(students)
-addStudentTable(student)
+addStudentToTable(student)
 calcularPromedio()
- 
 this.reset();
 });
-const tableBody=document.querySelector("#studentTable tbody");
-function addStudentTable(student){
-    const row=document.createElement("tr");
-    row.innerHTML=`
+
+function addStudentToTable(student) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
     <td>${student.name}</td>
     <td>${student.lastName}</td>
-    <td>${student.grade}</td>
-    <td><button class="delete">Eliminar</button></td>
+    <td>${student.grade.toFixed(1)}</td>
+    <td>
+        <button class="edit">Editar</button>
+        <button class="delete">Eliminar</button>
+    </td>
     `;
     
 row.querySelector(".delete").addEventListener("click",function(){
     deleteEstudiante(student,row);
 });
+
+row.querySelector(".edit").addEventListener("click", function () {
+    editarEstudiante(student, row);
+});
+
 tableBody.appendChild(row)
 }
+
 function deleteEstudiante(student,row){
     const index=students.indexOf(student);
     if(index>-1){
@@ -43,14 +57,24 @@ function deleteEstudiante(student,row){
     }
 }
 
-const promedios=document.getElementById("average")
-
 function calcularPromedio(){
     if (students.length==0){
         promedios.textContent="Promedio General del Curso: N/A"
-    return
+    return;
     }
     const total=students.reduce((sum,student)=>sum+student.grade,0);
     const prom=total/students.length;
     promedios.textContent="Promedio General del Curso :"+prom.toFixed(2);
+}
+
+function editarEstudiante(student, row) {
+    nameInput.value = student.name;
+    lastNameInput.value = student.lastName;
+    gradeInput.value = student.grade;
+    const index = students.indexOf(student);
+    if (index > -1) {
+        students.splice(index, 1);
+    }
+    row.remove();
+    calcularPromedio();
 }
